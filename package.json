@@ -1,0 +1,9 @@
+{
+  "name": "ecommerce-nestjs",
+  "private": true,
+  "scripts": {
+    "install:all": "npm --prefix apps/api install && npm --prefix apps/web install",
+    "dev:api": "npm --prefix apps/api run start:dev",
+    "dev:web": "npm --prefix apps/web run dev"
+  }
+}
