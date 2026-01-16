@@ -1,7 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { buildTheme } from "@/lib/theme";
 
 type Props = {
   children: React.ReactNode;
@@ -9,18 +10,7 @@ type Props = {
 };
 
 export default function ThemeRegistry({ children, primaryColor }: Props) {
-  const theme = React.useMemo(
-    () =>
-      createTheme({
-        palette: {
-          primary: {
-            main:
-              primaryColor && primaryColor.trim() ? primaryColor : "#1976d2",
-          },
-        },
-      }),
-    [primaryColor]
-  );
+  const theme = React.useMemo(() => buildTheme(primaryColor), [primaryColor]);
 
   return (
     <ThemeProvider theme={theme}>

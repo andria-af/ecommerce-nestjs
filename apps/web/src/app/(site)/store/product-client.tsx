@@ -1,5 +1,4 @@
 "use client";
-
 import {
   Box,
   Button,
@@ -8,6 +7,8 @@ import {
   Card,
   CardContent,
 } from "@mui/material";
+import { buildWhatsappMessage, buildWhatsappUrl } from "@/lib/whatsapp";
+import { formatPrice } from "@/lib/format";
 
 type Product = {
   id: string;
@@ -17,23 +18,16 @@ type Product = {
   imageUrl: string | null;
 };
 
-function formatPrice(priceCents: number | null) {
-  if (typeof priceCents !== "number") return null;
-  return `R$ ${(priceCents / 100).toFixed(2).replace(".", ",")}`;
-}
-
-export default function ProductClient({ product }: { product: Product }) {
-  const whatsappText = encodeURIComponent(
-    `Olá! Tenho interesse no produto "${product.title}".\n\n` +
-      (product.priceCents
-        ? `Valor: R$ ${(product.priceCents / 100)
-            .toFixed(2)
-            .replace(".", ",")}\n`
-        : "") +
-      `Poderia me passar mais informações?`
-  );
-
-  const whatsappUrl = `https://wa.me/5551992252389?text=${whatsappText}`;
+export default function ProductClient({
+  product,
+  settings,
+}: {
+  product: Product;
+  settings: { whatsappNumber: string };
+}) {
+  const priceLabel = formatPrice(product.priceCents);
+  const message = buildWhatsappMessage(product.title, priceLabel);
+  const whatsappUrl = buildWhatsappUrl(settings, message);
 
   return (
     <Container sx={{ py: 4, maxWidth: "sm" }}>

@@ -16,6 +16,7 @@ export default async function ProductPage({
 }) {
   const { id } = await params;
   const product = await apiGet<Product>(`/public/products/${id}`);
+  const settings = await apiGet<{ whatsappNumber: string }>("/public/settings");
 
-  return <ProductClient product={product} />;
+  return <ProductClient product={product} settings={settings} />;
 }
