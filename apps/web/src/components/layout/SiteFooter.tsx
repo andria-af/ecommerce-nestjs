@@ -26,7 +26,7 @@ export function SiteFooter() {
         }}
       >
         <Typography variant="body2" color="text.secondary">
-          © {year} OnlineShop. Todos os direitos reservados.
+          © {year} Todos os direitos reservados.
         </Typography>
 
         <Box sx={{ display: "flex", gap: 1 }}>

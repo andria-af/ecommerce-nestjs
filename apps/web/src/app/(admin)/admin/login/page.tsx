@@ -2,8 +2,11 @@
 
 import { useState } from "react";
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 export default function AdminLoginPage() {
+  const router = useRouter();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -24,16 +27,23 @@ export default function AdminLoginPage() {
         }
       );
 
+      // captura mensagem do backend (se existir) para não “sumir”
       if (!res.ok) {
-        throw new Error("Credenciais inválidas");
+        let msg = "Credenciais inválidas";
+        try {
+          const body = await res.json();
+          msg = body?.message ?? msg;
+        } catch {}
+        throw new Error(msg);
       }
 
       const data = await res.json();
       localStorage.setItem("admin_token", data.accessToken);
 
-      window.location.href = "/admin/products";
+      // redireciona para /admin/settings (somente 1 redirect)
+      router.replace("/admin/settings");
     } catch (err: any) {
-      setError(err.message);
+      setError(err?.message ?? "Erro ao autenticar");
     } finally {
       setLoading(false);
     }
@@ -50,6 +60,7 @@ export default function AdminLoginPage() {
           label="Email"
           fullWidth
           margin="normal"
+          autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -59,6 +70,7 @@ export default function AdminLoginPage() {
           type="password"
           fullWidth
           margin="normal"
+          autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
@@ -76,7 +88,7 @@ export default function AdminLoginPage() {
           sx={{ mt: 2 }}
           disabled={loading}
         >
-          Entrar
+          {loading ? "Entrando..." : "Entrar"}
         </Button>
       </Box>
     </Container>

@@ -53,7 +53,7 @@ export function SiteHeader() {
             {/* Nav */}
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
               <Button component={Link} href="/#sobre" sx={navSx}>
-                Sobre
+                Home
               </Button>
               <Button component={Link} href="/#contato" sx={navSx}>
                 Contato

@@ -8,6 +8,7 @@ import { PublicLeadsModule } from './modules/public/leads/public-leads.module';
 import { AuthModule } from './modules/admin/auth/auth.module';
 import { AdminProductsModule } from './modules/admin/products/admin-products.module';
 import { AdminSettingsModule } from './modules/admin/settings/admin-settings.module';
+import { UploadModule } from './modules/upload/upload.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { AdminSettingsModule } from './modules/admin/settings/admin-settings.mod
     AuthModule,
     AdminProductsModule,
     AdminSettingsModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],

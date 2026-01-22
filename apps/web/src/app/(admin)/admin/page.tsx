@@ -1,80 +1,91 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Box, Button, IconButton, Typography } from "@mui/material";
-import DeleteIcon from "@mui/icons-material/Delete";
-import { adminFetch } from "@/lib/adminApi";
-import { formatPrice } from "@/lib/format";
-import { Page } from "@/components/ui/Page";
-import { SectionCard } from "@/components/ui/SectionCard";
+import Link from "next/link";
+import { useAdminGuard } from "@/lib/auth/useAdminGuard";
+import {
+  Box,
+  Card,
+  CardActionArea,
+  CardContent,
+  Typography,
+  Grid,
+} from "@mui/material";
 
-type Product = {
-  id: string;
-  title: string;
-  priceCents: number | null;
-  active: boolean;
-};
+const items = [
+  {
+    title: "Gerenciar produtos",
+    description: "Criar, editar e remover produtos.",
+    href: "/admin/products",
+  },
+  {
+    title: "Gerenciar estilo",
+    description: "Cor do site, imagem da home, Instagram e WhatsApp.",
+    href: "/admin/settings",
+  },
+];
 
-export default function AdminProductsPage() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  async function load() {
-    const data = await adminFetch<Product[]>("/admin/products");
-    setProducts(data);
-    setLoading(false);
-  }
-
-  async function remove(id: string) {
-    if (!confirm("Excluir este produto?")) return;
-
-    await adminFetch(`/admin/products/${id}`, {
-      method: "DELETE",
-    });
-
-    load();
-  }
-
-  useEffect(() => {
-    load();
-  }, []);
-
+export default function AdminHomePage() {
+  useAdminGuard();
   return (
-    <Page title="Produtos" subtitle="Gerencie os produtos da loja">
-      <SectionCard>
-        {loading && <Typography>Carregando...</Typography>}
+    <Box
+      sx={{
+        p: {
+          xs: 2,
+          md: 4,
+        },
+      }}
+    >
+      <Typography
+        variant="h4"
+        sx={{
+          fontWeight: 700,
+          mb: 3,
+        }}
+      >
+        Painel do vendedor
+      </Typography>
 
-        {!loading &&
-          products.map((p) => (
-            <Box
-              key={p.id}
+      <Grid container spacing={2}>
+        {items.map((item) => (
+          <Grid
+            key={item.href}
+            size={{
+              xs: 12,
+              md: 6,
+            }}
+          >
+            <Card
               sx={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                borderBottom: "1px solid #eee",
-                py: 1.5,
+                height: "100%",
+                borderRadius: 3,
               }}
             >
-              <Box>
-                <Typography fontWeight={700}>{p.title}</Typography>
-                <Typography color="text.secondary" fontSize={14}>
-                  {formatPrice(p.priceCents)}
-                </Typography>
-              </Box>
+              <CardActionArea
+                component={Link}
+                href={item.href}
+                sx={{
+                  height: "100%",
+                }}
+              >
+                <CardContent>
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      fontWeight: 700,
+                    }}
+                  >
+                    {item.title}
+                  </Typography>
 
-              <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                <Button size="small" href={`/admin/products/${p.id}/edit`}>
-                  Editar
-                </Button>
-
-                <IconButton onClick={() => remove(p.id)} color="error">
-                  <DeleteIcon />
-                </IconButton>
-              </Box>
-            </Box>
-          ))}
-      </SectionCard>
-    </Page>
+                  <Typography color="text.secondary" sx={{ mt: 1 }}>
+                    {item.description}
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    </Box>
   );
 }

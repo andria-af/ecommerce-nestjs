@@ -1,7 +1,13 @@
 import { Box, Container, Typography } from "@mui/material";
 import { red } from "@mui/material/colors";
+import { apiGet } from "@/lib/api";
 
-export default function HomePage() {
+type PublicSettings = {
+  homeImageUrl: string | null;
+};
+
+export default async function HomePage() {
+  const settings = await apiGet<PublicSettings>("/public/settings");
   return (
     <Box
       sx={{
@@ -17,8 +23,9 @@ export default function HomePage() {
         sx={{
           position: "absolute",
           inset: 0,
-          backgroundImage:
-            "url(https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1600&q=80)",
+          backgroundImage: settings.homeImageUrl
+            ? `url(${settings.homeImageUrl})`
+            : "none",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
