@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   AppBar,
@@ -10,21 +11,23 @@ import {
   Toolbar,
 } from "@mui/material";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-
-const navSx = {
-  color: "text.primary",
-  fontWeight: 500, // leve negrito
-  px: 1.25,
-  borderRadius: 2,
-  textTransform: "none",
-  "&:hover": {
-    bgcolor: "rgba(17,24,39,0.06)",
-  },
-};
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 
 export function SiteHeader() {
+  const [settingsHref, setSettingsHref] = useState("/admin/login");
+
+  useEffect(() => {
+    const token = localStorage.getItem("admin_token");
+    setSettingsHref(token ? "/admin/settings" : "/admin/login");
+  }, []);
+
   return (
-    <AppBar elevation={0} position="sticky" color="transparent">
+    <AppBar
+      elevation={0}
+      position="fixed"
+      color="transparent"
+      sx={{ zIndex: 1200 }}
+    >
       <Box
         sx={{
           borderBottom: "1px solid rgba(17,24,39,0.08)",
@@ -34,7 +37,6 @@ export function SiteHeader() {
       >
         <Container>
           <Toolbar disableGutters sx={{ py: 1, display: "flex", gap: 2 }}>
-            {/* Home */}
             <IconButton
               component={Link}
               href="/"
@@ -48,20 +50,49 @@ export function SiteHeader() {
               <HomeOutlinedIcon />
             </IconButton>
 
-            <Box sx={{ flex: 1 }} />
-
-            {/* Nav */}
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <Button component={Link} href="/#sobre" sx={navSx}>
+              <Button
+                component={Link}
+                href="/"
+                sx={{
+                  color: "text.primary",
+                  fontWeight: 500,
+                  px: 1.25,
+                  borderRadius: 2,
+                  textTransform: "none",
+                }}
+              >
                 Home
               </Button>
-              <Button component={Link} href="/#contato" sx={navSx}>
-                Contato
-              </Button>
-              <Button component={Link} href="/store" sx={navSx}>
+              <Button
+                component={Link}
+                href="/store"
+                sx={{
+                  color: "text.primary",
+                  fontWeight: 500,
+                  px: 1.25,
+                  borderRadius: 2,
+                  textTransform: "none",
+                }}
+              >
                 Ver produtos
               </Button>
             </Box>
+
+            <Box sx={{ flex: 1 }} />
+
+            <IconButton
+              component={Link}
+              href={settingsHref}
+              aria-label="Configurações"
+              sx={{
+                color: "text.primary",
+                border: "1px solid rgba(17,24,39,0.10)",
+                borderRadius: 2,
+              }}
+            >
+              <SettingsOutlinedIcon />
+            </IconButton>
           </Toolbar>
         </Container>
       </Box>

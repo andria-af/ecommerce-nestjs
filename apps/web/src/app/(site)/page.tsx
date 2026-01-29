@@ -1,36 +1,41 @@
 import { Box, Container, Typography } from "@mui/material";
-import { red } from "@mui/material/colors";
 import { apiGet } from "@/lib/api";
+import { assetUrl } from "@/lib/assetUrl";
 
 type PublicSettings = {
   homeImageUrl: string | null;
+  primaryColor: string;
 };
 
 export default async function HomePage() {
   const settings = await apiGet<PublicSettings>("/public/settings");
+  const bg = assetUrl(settings.homeImageUrl);
+
   return (
     <Box
       sx={{
-        flex: 1, // 🔑 ocupa todo o espaço disponível
+        width: "100%",
+        minHeight: "calc(100dvh - var(--site-header-h) - var(--site-footer-h))",
         display: "flex",
-        alignItems: "center", // centraliza verticalmente
+        alignItems: "center",
         position: "relative",
         overflow: "hidden",
       }}
     >
       {/* Background */}
       <Box
+        aria-hidden
         sx={{
           position: "absolute",
           inset: 0,
-          backgroundImage: settings.homeImageUrl
-            ? `url(${settings.homeImageUrl})`
-            : "none",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundColor: settings.primaryColor,
+          backgroundImage: bg ? `url("${bg}")` : "none",
+          backgroundSize: "contain",
+          backgroundPosition: "center top",
           backgroundRepeat: "no-repeat",
-          opacity: 0.12,
+          backgroundBlendMode: "normal",
           zIndex: 0,
+          opacity: 0.75,
         }}
       />
 
@@ -39,46 +44,32 @@ export default async function HomePage() {
         sx={{
           position: "relative",
           zIndex: 1,
-          display: "grid",
-          gridTemplateColumns: { xs: "1fr", md: "1.2fr 0.8fr" },
-          gap: 4,
-          alignItems: "center",
+          py: { xs: 6, md: 10 },
         }}
       >
-        <Box>
-          <Typography
-            variant="h3"
-            color="primary.main"
-            sx={{ fontWeight: 700 }}
-          >
-            Bruna Fukami
-          </Typography>
-          <Typography
-            variant="h3"
-            color="text.secondary"
-            sx={{ fontWeight: 700 }}
-          >
-            Biomédica Esteta
-          </Typography>
+        <Typography variant="h3" color="primary.main" sx={{ fontWeight: 700 }}>
+          Bruna Fukami
+        </Typography>
 
-          <Typography
-            color="text.secondary"
-            sx={{ mt: 1.5, fontSize: 18, lineHeight: 1.7 }}
-          >
-            Beleza com naturalidade e estratégia.
-          </Typography>
-        </Box>
+        <Typography
+          variant="h3"
+          color="text.secondary"
+          sx={{ fontWeight: 700 }}
+        >
+          Biomédica Esteta
+        </Typography>
 
-        {/* Card decorativo */}
-        {/* <Box
+        <Typography
+          color="text.secondary"
           sx={{
-            height: { xs: 220, md: 320 },
-            borderRadius: 4,
-            bgcolor: "background.paper",
-            border: "1px solid rgba(17,24,39,0.08)",
-            boxShadow: "0 10px 30px rgba(17,24,39,0.06)",
+            mt: 1.5,
+            fontSize: 18,
+            lineHeight: 1.7,
+            maxWidth: 520,
           }}
-        /> */}
+        >
+          Beleza com naturalidade e estratégia.
+        </Typography>
       </Container>
     </Box>
   );

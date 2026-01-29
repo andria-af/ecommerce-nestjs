@@ -5,7 +5,7 @@ export interface IPublicSettings {
   whatsappNumber: string;
   primaryColor: string | null;
 
-  heroImageUrl?: string | null;
+  homeImageUrl?: string | null;
   instagramUrl?: string | null;
   logoUrl?: string | null;
 }

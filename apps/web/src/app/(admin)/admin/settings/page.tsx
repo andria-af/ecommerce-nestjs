@@ -18,6 +18,7 @@ import PublicSettingsService, {
   IPublicSettings,
 } from "@/api/services/PublicSettings";
 import { useAdminGuard } from "@/lib/auth/useAdminGuard";
+import { adminFetch } from "@/lib/adminApi";
 
 export default function AdminSettingsPage() {
   useAdminGuard();
@@ -26,18 +27,26 @@ export default function AdminSettingsPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    PublicSettingsService.get().then(setSettings);
+    adminFetch<IPublicSettings>("/admin/settings").then(setSettings);
   }, []);
 
   if (!settings) return null;
 
   async function handleSave() {
+    if (!settings) return;
     setLoading(true);
     try {
-      await fetch("/api/settings", {
-        method: "PUT",
-        body: JSON.stringify(settings),
+      const updated = await adminFetch<IPublicSettings>("/admin/settings", {
+        method: "PATCH",
+        body: JSON.stringify({
+          primaryColor: settings.primaryColor,
+          whatsappNumber: settings.whatsappNumber,
+          instagramUrl: settings.instagramUrl,
+          homeImageUrl: settings.homeImageUrl,
+        }),
       });
+
+      setSettings(updated);
       alert("Configurações salvas com sucesso");
     } finally {
       setLoading(false);
@@ -45,8 +54,15 @@ export default function AdminSettingsPage() {
   }
 
   async function handleImageUpload(file: File) {
-    const { url } = await UploadService.uploadImage(file);
-    setSettings((prev) => (prev ? { ...prev, heroImageUrl: url } : prev));
+    const form = new FormData();
+    form.append("file", file);
+
+    const res = await adminFetch<{ url: string }>("/upload", {
+      method: "POST",
+      body: form,
+    });
+
+    setSettings((prev) => (prev ? { ...prev, homeImageUrl: res.url } : prev));
   }
 
   return (
@@ -150,10 +166,10 @@ export default function AdminSettingsPage() {
                     />
                   </Button>
 
-                  {settings.heroImageUrl && (
+                  {settings.homeImageUrl && (
                     <Box
                       component="img"
-                      src={settings.heroImageUrl}
+                      src={settings.homeImageUrl}
                       alt="Preview"
                       sx={{
                         mt: 2,

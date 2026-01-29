@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../../../infra/prisma/prisma.service';
 
 @Injectable()
@@ -11,11 +11,19 @@ export class PublicSettingsService {
         storeName: true,
         whatsappNumber: true,
         primaryColor: true,
+        instagramUrl: true,
+        homeImageUrl: true,
       },
     });
 
     if (!row) {
-      throw new NotFoundException('Store settings not found');
+      return {
+        storeName: 'Minha Loja',
+        whatsappNumber: null,
+        primaryColor: '#1976d2',
+        instagramUrl: null,
+        homeImageUrl: null,
+      };
     }
 
     return row;
