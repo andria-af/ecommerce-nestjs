@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Box,
   Button,
@@ -23,49 +24,72 @@ export default function ProductClient({
   settings,
 }: {
   product: Product;
-  settings: { whatsappNumber: string };
+  settings: { whatsappNumber: string | null; primaryColor: string };
 }) {
-  const priceLabel = formatPrice(product.priceCents);
+  const priceLabel =
+    typeof product.priceCents === "number"
+      ? formatPrice(product.priceCents)
+      : "";
   const message = buildWhatsappMessage(product.title, priceLabel);
-  const whatsappUrl = buildWhatsappUrl(settings, message);
+  const whatsappUrl = buildWhatsappUrl(
+    { whatsappNumber: settings.whatsappNumber ?? "" },
+    message,
+  );
 
   return (
-    <Container sx={{ py: 4, maxWidth: "sm" }}>
-      <Card>
-        <CardContent>
-          <Typography variant="h4" fontWeight={700}>
-            {product.title}
+    <Box
+      sx={{
+        bgcolor: settings.primaryColor,
+        minHeight: "calc(100dvh - var(--site-header-h) - var(--site-footer-h))",
+      }}
+    >
+      <Container sx={{ py: 4, maxWidth: "sm" }}>
+        {/* Header local */}
+        <Box sx={{ mb: 2 }}>
+          <Typography variant="h4" sx={{ color: "#fff", fontWeight: 800 }}>
+            Produto
           </Typography>
-
-          <Typography color="text.secondary" sx={{ mt: 1 }}>
-            {product.description}
+          <Typography sx={{ color: "rgba(255,255,255,0.85)" }}>
+            Finalize pelo WhatsApp
           </Typography>
+        </Box>
 
-          {formatPrice(product.priceCents) && (
-            <Typography
-              variant="h5"
-              color="primary"
-              fontWeight={700}
-              sx={{ mt: 2 }}
-            >
-              {formatPrice(product.priceCents)}
+        <Card>
+          <CardContent>
+            <Typography variant="h4" fontWeight={700}>
+              {product.title}
             </Typography>
-          )}
 
-          <Box sx={{ mt: 3 }}>
-            <Button
-              fullWidth
-              size="large"
-              variant="contained"
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Finalizar pelo WhatsApp
-            </Button>
-          </Box>
-        </CardContent>
-      </Card>
-    </Container>
+            <Typography color="text.secondary" sx={{ mt: 1 }}>
+              {product.description}
+            </Typography>
+
+            {typeof product.priceCents === "number" && (
+              <Typography
+                variant="h5"
+                color="primary"
+                fontWeight={700}
+                sx={{ mt: 2 }}
+              >
+                {formatPrice(product.priceCents)}
+              </Typography>
+            )}
+
+            <Box sx={{ mt: 3 }}>
+              <Button
+                fullWidth
+                size="large"
+                variant="contained"
+                href={whatsappUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Finalizar pelo WhatsApp
+              </Button>
+            </Box>
+          </CardContent>
+        </Card>
+      </Container>
+    </Box>
   );
 }

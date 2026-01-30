@@ -9,22 +9,31 @@ import {
   TextField,
   Typography,
   Grid,
+  IconButton,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { logout } from "@/lib/auth/logout";
-import UploadService from "@/api/services/Upload";
-import PublicSettingsService, {
-  IPublicSettings,
-} from "@/api/services/PublicSettings";
 import { useAdminGuard } from "@/lib/auth/useAdminGuard";
 import { adminFetch } from "@/lib/adminApi";
+import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
+import { IPublicSettings } from "@/api/services/PublicSettings";
 
 export default function AdminSettingsPage() {
   useAdminGuard();
   const router = useRouter();
+
   const [settings, setSettings] = useState<IPublicSettings | null>(null);
   const [loading, setLoading] = useState(false);
+
+  // Toast
+  const [toastOpen, setToastOpen] = useState(false);
+  const [toastMsg, setToastMsg] = useState("");
+  const [toastSeverity, setToastSeverity] = useState<
+    "success" | "error" | "info" | "warning"
+  >("success");
 
   useEffect(() => {
     adminFetch<IPublicSettings>("/admin/settings").then(setSettings);
@@ -34,20 +43,35 @@ export default function AdminSettingsPage() {
 
   async function handleSave() {
     if (!settings) return;
+
+    const s = settings; // <- trava o type (não-null)
+
     setLoading(true);
     try {
       const updated = await adminFetch<IPublicSettings>("/admin/settings", {
         method: "PATCH",
         body: JSON.stringify({
-          primaryColor: settings.primaryColor,
-          whatsappNumber: settings.whatsappNumber,
-          instagramUrl: settings.instagramUrl,
-          homeImageUrl: settings.homeImageUrl,
+          primaryColor: s.primaryColor,
+          whatsappNumber: s.whatsappNumber,
+          instagramUrl: s.instagramUrl,
+          homeImageUrl: s.homeImageUrl,
         }),
       });
 
       setSettings(updated);
-      alert("Configurações salvas com sucesso");
+
+      setToastSeverity("success");
+      setToastMsg("Configurações salvas com sucesso");
+      setToastOpen(true);
+
+      setTimeout(() => {
+        router.refresh();
+        window.location.reload();
+      }, 700);
+    } catch {
+      setToastSeverity("error");
+      setToastMsg("Erro ao salvar configurações");
+      setToastOpen(true);
     } finally {
       setLoading(false);
     }
@@ -57,12 +81,22 @@ export default function AdminSettingsPage() {
     const form = new FormData();
     form.append("file", file);
 
-    const res = await adminFetch<{ url: string }>("/upload", {
-      method: "POST",
-      body: form,
-    });
+    try {
+      const res = await adminFetch<{ url: string }>("/upload", {
+        method: "POST",
+        body: form,
+      });
 
-    setSettings((prev) => (prev ? { ...prev, homeImageUrl: res.url } : prev));
+      setSettings((prev) => (prev ? { ...prev, homeImageUrl: res.url } : prev));
+
+      setToastSeverity("success");
+      setToastMsg("Imagem enviada com sucesso");
+      setToastOpen(true);
+    } catch {
+      setToastSeverity("error");
+      setToastMsg("Erro ao enviar imagem");
+      setToastOpen(true);
+    }
   }
 
   return (
@@ -70,8 +104,8 @@ export default function AdminSettingsPage() {
       <Box
         sx={{
           display: "flex",
-          justifyContent: "space-between",
           alignItems: "center",
+          justifyContent: "space-between",
           mb: 3,
         }}
       >
@@ -79,13 +113,27 @@ export default function AdminSettingsPage() {
           Configurações
         </Typography>
 
-        <Button variant="outlined" onClick={() => logout(router)}>
-          Sair
-        </Button>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <IconButton
+            component={Link}
+            href="/"
+            aria-label="Início"
+            sx={{
+              color: "primary.main",
+              border: "1px solid rgba(17,24,39,0.10)",
+              borderRadius: 2,
+            }}
+          >
+            <HomeOutlinedIcon />
+          </IconButton>
+
+          <Button variant="outlined" onClick={() => logout(router)}>
+            Sair
+          </Button>
+        </Box>
       </Box>
 
       <Grid container spacing={3}>
-        {/* BLOCO 1: ESTILO */}
         <Grid size={{ xs: 12 }}>
           <Card sx={{ borderRadius: 3 }}>
             <CardContent>
@@ -94,7 +142,6 @@ export default function AdminSettingsPage() {
               </Typography>
 
               <Grid container spacing={2}>
-                {/* Cor principal */}
                 <Grid size={{ xs: 12, md: 6 }}>
                   <Typography fontWeight={600} mb={1}>
                     Cor principal
@@ -112,7 +159,6 @@ export default function AdminSettingsPage() {
                   />
                 </Grid>
 
-                {/* WhatsApp */}
                 <Grid size={{ xs: 12, md: 6 }}>
                   <Typography fontWeight={600} mb={1}>
                     WhatsApp
@@ -129,7 +175,6 @@ export default function AdminSettingsPage() {
                   />
                 </Grid>
 
-                {/* Instagram */}
                 <Grid size={{ xs: 12, md: 6 }}>
                   <Typography fontWeight={600} mb={1}>
                     Instagram
@@ -147,7 +192,6 @@ export default function AdminSettingsPage() {
                   />
                 </Grid>
 
-                {/* Imagem da home */}
                 <Grid size={{ xs: 12, md: 6 }}>
                   <Typography fontWeight={600} mb={1}>
                     Imagem da home
@@ -182,7 +226,6 @@ export default function AdminSettingsPage() {
                   )}
                 </Grid>
 
-                {/* Salvar */}
                 <Grid size={{ xs: 12 }}>
                   <Button
                     variant="contained"
@@ -198,7 +241,6 @@ export default function AdminSettingsPage() {
           </Card>
         </Grid>
 
-        {/* BLOCO 2: PRODUTOS */}
         <Grid size={{ xs: 12 }}>
           <Card sx={{ borderRadius: 3 }}>
             <CardContent>
@@ -218,6 +260,23 @@ export default function AdminSettingsPage() {
           </Card>
         </Grid>
       </Grid>
+
+      {/* TOAST */}
+      <Snackbar
+        open={toastOpen}
+        autoHideDuration={2500}
+        onClose={() => setToastOpen(false)}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setToastOpen(false)}
+          severity={toastSeverity}
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {toastMsg}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

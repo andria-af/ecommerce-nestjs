@@ -50,35 +50,6 @@ export function SiteHeader() {
               <HomeOutlinedIcon />
             </IconButton>
 
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <Button
-                component={Link}
-                href="/"
-                sx={{
-                  color: "text.primary",
-                  fontWeight: 500,
-                  px: 1.25,
-                  borderRadius: 2,
-                  textTransform: "none",
-                }}
-              >
-                Home
-              </Button>
-              <Button
-                component={Link}
-                href="/store"
-                sx={{
-                  color: "text.primary",
-                  fontWeight: 500,
-                  px: 1.25,
-                  borderRadius: 2,
-                  textTransform: "none",
-                }}
-              >
-                Ver produtos
-              </Button>
-            </Box>
-
             <Box sx={{ flex: 1 }} />
 
             <IconButton
@@ -86,7 +57,7 @@ export function SiteHeader() {
               href={settingsHref}
               aria-label="Configurações"
               sx={{
-                color: "text.primary",
+                color: "text.secondary",
                 border: "1px solid rgba(17,24,39,0.10)",
                 borderRadius: 2,
               }}

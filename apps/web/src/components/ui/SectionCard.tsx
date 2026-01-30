@@ -1,16 +1,15 @@
-import { Card, CardContent, Box } from "@mui/material";
+import { Card, CardContent } from "@mui/material";
 import { ReactNode } from "react";
 
 type SectionCardProps = {
   children: ReactNode;
+  p?: number; // padding custom
 };
 
-export function SectionCard({ children }: SectionCardProps) {
+export function SectionCard({ children, p = 3 }: SectionCardProps) {
   return (
     <Card sx={{ borderRadius: 3, boxShadow: 3 }}>
-      <CardContent>
-        <Box>{children}</Box>
-      </CardContent>
+      <CardContent sx={{ p }}>{children}</CardContent>
     </Card>
   );
 }

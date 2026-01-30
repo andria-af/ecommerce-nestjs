@@ -24,7 +24,7 @@ export default function AdminLoginPage() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email, password }),
-        }
+        },
       );
 
       // captura mensagem do backend (se existir) para não “sumir”
@@ -52,7 +52,7 @@ export default function AdminLoginPage() {
   return (
     <Container maxWidth="xs" sx={{ py: 6 }}>
       <Typography variant="h5" fontWeight={800} mb={2}>
-        Login Admin
+        Gerenciador da Loja - Login
       </Typography>
 
       <Box component="form" onSubmit={handleSubmit}>
