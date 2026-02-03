@@ -1,36 +1,133 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🛍️ ecommerce-nestjs
 
-## Getting Started
+Aplicação **fullstack** desenvolvida em **NestJS + Next.js** para venda de **serviços sem carrinho**, com foco em **conversão via WhatsApp** e **customização visual dinâmica**.
 
-First, run the development server:
+Projeto criado como **portfolio técnico** e **caso real de uso**.
+
+---
+
+## 📸 Screenshots
+
+### Home (área pública)
+
+![Home](./docs/images/home.png)
+
+### Listagem de serviços
+
+![Serviços](./docs/images/servicos.png)
+
+### Detalhes do serviço
+
+![Detalhes](./docs/images/detalhes.png)
+
+### Painel administrativo – Configurações
+
+![Configurações](./docs/images/configuracoes.png)
+
+### Painel administrativo – Produtos
+
+![Produtos](./docs/images/produtos.png)
+
+### Edição de produto
+
+![Editar Produto](./docs/images/editar-produto.png)
+
+---
+
+## 🧱 Arquitetura
+
+**Monorepo**
+ecommerce-nestjs/
+├── apps/
+│ ├── api/ → NestJS + Prisma + PostgreSQL
+│ └── web/ → Next.js (App Router) + MUI
+
+## 🔧 Stack
+
+### Backend
+
+- NestJS
+- Prisma ORM
+- PostgreSQL
+- API REST
+- Upload de imagens
+- Configurações persistidas em banco
+
+### Frontend
+
+- Next.js (App Router)
+- React
+- MUI (Material UI)
+- Tema dinâmico controlado pela API
+
+---
+
+## ⚙️ Funcionalidades
+
+### Área pública
+
+- Landing page customizável (cor + imagem)
+- Listagem e detalhes de serviços
+- Preço formatado (R$)
+- CTA para WhatsApp com mensagem dinâmica
+- Link para Instagram
+
+### Área administrativa
+
+- Login de administrador
+- CRUD de produtos/serviços
+- Upload e gerenciamento de imagens
+- Configurações globais:
+  - cor principal
+  - WhatsApp
+  - Instagram
+  - imagem da home
+
+---
+
+## 💬 Integração com WhatsApp
+
+- Mensagem gerada dinamicamente
+- Nome do serviço + valor formatado
+- Texto complementar
+- Uso de `encodeURIComponent` para garantir URL segura
+
+---
+
+## ▶️ Rodar localmente
+
+### Pré-requisitos
+
+- Node.js (LTS)
+- PostgreSQL
+
+### Backend
 
 ```bash
+cd apps/api
+npm install
+npx prisma migrate dev
+npm run start:dev
+
+Frontend
+cd apps/web
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+
+Web: http://localhost:3001
+
+API: http://localhost:3000
+
+🌍 Deploy
+
+Deploy planejado para Render (API e Web).
+Links de produção serão adicionados após publicação.
+
+👩‍💻 Autora
+
+Ândria Aquino Ferreira
+Fullstack Developer
+
+Node.js · TypeScript · NestJS · Prisma · PostgreSQL · React · Next.js
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

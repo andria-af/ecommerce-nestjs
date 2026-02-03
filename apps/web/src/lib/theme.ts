@@ -1,22 +1,40 @@
-import { createTheme } from "@mui/material/styles";
+import { createTheme, alpha, lighten } from "@mui/material/styles";
 
-export function buildTheme(accentColor?: string) {
-  const primary = accentColor && accentColor.trim() ? accentColor : "#eb2525";
+export function buildTheme(
+  accentColor?: string,
+  mode: "light" | "dark" = "light",
+) {
+  const primary = accentColor && accentColor.trim() ? accentColor : "#8b5c99";
+
+  const isDark = mode === "dark";
 
   return createTheme({
     palette: {
-      mode: "light",
+      mode,
       primary: { main: primary },
-      background: {
-        default: "#fafafa",
-        paper: "#ffffff",
-      },
-      text: {
-        primary: "#111827",
-        secondary: "#6b7280",
-      },
+      background: isDark
+        ? {
+            default: "#1f1726", // roxo escuro elegante
+            paper: "#2a1f33", // card roxo escuro claro
+          }
+        : {
+            default: lighten(primary, 0.92),
+            paper: "#ffffff",
+          },
+
+      text: isDark
+        ? {
+            primary: "#f5f3f7",
+            secondary: alpha("#f5f3f7", 0.7),
+          }
+        : {
+            primary: "#57585a",
+            secondary: "#6b7280",
+          },
     },
+
     shape: { borderRadius: 14 },
+
     typography: {
       fontFamily: [
         "Inter",
@@ -33,32 +51,19 @@ export function buildTheme(accentColor?: string) {
       h4: { fontWeight: 700 },
       h5: { fontWeight: 600 },
       h6: { fontWeight: 600 },
-      subtitle1: { fontWeight: 500 },
-      subtitle2: { fontWeight: 500 },
-      body1: { fontWeight: 400 },
-      body2: { fontWeight: 400 },
       button: { textTransform: "none", fontWeight: 500 },
     },
+
     components: {
-      MuiContainer: {
-        defaultProps: { maxWidth: "lg" },
-      },
-      MuiButton: {
-        styleOverrides: {
-          root: { borderRadius: 12 },
-        },
-      },
       MuiCard: {
         styleOverrides: {
           root: {
             borderRadius: 18,
-            border: "1px solid rgba(17,24,39,0.08)",
-            boxShadow: "0 10px 30px rgba(17,24,39,0.06)",
+            boxShadow: isDark
+              ? "0 10px 30px rgba(0,0,0,0.45)"
+              : "0 10px 30px rgba(17,24,39,0.06)",
           },
         },
-      },
-      MuiLink: {
-        defaultProps: { underline: "none" },
       },
     },
   });

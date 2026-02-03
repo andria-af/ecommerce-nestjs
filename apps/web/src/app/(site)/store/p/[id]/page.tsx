@@ -1,5 +1,5 @@
 import { apiGet } from "@/lib/api";
-import ProductClient from "./product-client";
+import ProductClient from "../../product-client";
 
 type Product = {
   id: string;
@@ -16,7 +16,10 @@ export default async function ProductPage({
 }) {
   const { id } = await params;
   const product = await apiGet<Product>(`/public/products/${id}`);
-  const settings = await apiGet<{ whatsappNumber: string }>("/public/settings");
+  const settings = await apiGet<{
+    whatsappNumber: string;
+    primaryColor: string;
+  }>("/public/settings");
 
   return <ProductClient product={product} settings={settings} />;
 }

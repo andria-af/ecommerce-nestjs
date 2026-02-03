@@ -1,25 +1,36 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import Link from "next/link";
-import {
-  AppBar,
-  Box,
-  Button,
-  Container,
-  IconButton,
-  Toolbar,
-} from "@mui/material";
+import { AppBar, Box, Container, IconButton, Toolbar } from "@mui/material";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 
-export function SiteHeader() {
+export function SiteHeader({
+  onHeightChange,
+}: {
+  onHeightChange?: (h: number) => void;
+}) {
   const [settingsHref, setSettingsHref] = useState("/admin/login");
+  const contentRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem("admin_token");
     setSettingsHref(token ? "/admin/settings" : "/admin/login");
   }, []);
+
+  useLayoutEffect(() => {
+    const el = contentRef.current;
+    if (!el || !onHeightChange) return;
+
+    const apply = () => onHeightChange(el.offsetHeight);
+
+    apply();
+    const ro = new ResizeObserver(apply);
+    ro.observe(el);
+
+    return () => ro.disconnect();
+  }, [onHeightChange]);
 
   return (
     <AppBar
@@ -29,6 +40,7 @@ export function SiteHeader() {
       sx={{ zIndex: 1200 }}
     >
       <Box
+        ref={contentRef}
         sx={{
           borderBottom: "1px solid rgba(17,24,39,0.08)",
           bgcolor: "rgba(250,250,250,0.8)",

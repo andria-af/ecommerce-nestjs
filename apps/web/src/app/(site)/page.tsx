@@ -27,7 +27,6 @@ export default async function HomePage() {
         alignItems: "center",
       }}
     >
-      {/* Background com imagem full + overlay em gradiente */}
       <Box
         aria-hidden
         sx={{

@@ -25,22 +25,18 @@ export default async function StorePage() {
   return (
     <Box
       sx={{
-        bgcolor: settings.primaryColor,
-        // deixa mais “clean” no fundo
-        backgroundImage:
-          "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.18), rgba(255,255,255,0) 55%)",
+        minHeight: "calc(100dvh - var(--site-header-h) - var(--site-footer-h))",
       }}
     >
-      {/* Header local da página (acima do conteúdo) */}
-      <Box
-        sx={{
-          pt: { xs: 3, md: 5 },
-          pb: { xs: 2, md: 3 },
-        }}
-      >
+      <Box sx={{ pt: { xs: 3, md: 5 }, pb: { xs: 2, md: 3 } }}>
         <Page
-          title="Produtos"
-          subtitle="Escolha um item e finalize pelo WhatsApp."
+          title="Serviços"
+          titleSx={{
+            color: "#fff",
+            fontStyle: "italic",
+            fontFamily: '"Cormorant Garamond", Inter, system-ui, sans-serif',
+            textShadow: "0 6px 18px rgba(0,0,0,0.25)",
+          }}
         >
           <SectionCard>
             <ProductGrid products={products} />

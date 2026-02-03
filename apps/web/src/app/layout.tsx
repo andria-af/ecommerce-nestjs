@@ -26,7 +26,7 @@ export default async function RootLayout({
     <html lang="pt-BR">
       <body>
         <AppRouterCacheProvider options={{ key: "mui" }}>
-          <ThemeRegistry primaryColor={settings?.primaryColor}>
+          <ThemeRegistry primaryColor={settings?.primaryColor} mode="light">
             {children}
           </ThemeRegistry>
         </AppRouterCacheProvider>

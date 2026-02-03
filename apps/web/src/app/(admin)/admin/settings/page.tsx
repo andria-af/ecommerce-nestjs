@@ -27,8 +27,6 @@ export default function AdminSettingsPage() {
 
   const [settings, setSettings] = useState<IPublicSettings | null>(null);
   const [loading, setLoading] = useState(false);
-
-  // Toast
   const [toastOpen, setToastOpen] = useState(false);
   const [toastMsg, setToastMsg] = useState("");
   const [toastSeverity, setToastSeverity] = useState<
@@ -44,7 +42,7 @@ export default function AdminSettingsPage() {
   async function handleSave() {
     if (!settings) return;
 
-    const s = settings; // <- trava o type (não-null)
+    const s = settings;
 
     setLoading(true);
     try {
