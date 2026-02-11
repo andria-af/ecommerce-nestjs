@@ -11,16 +11,21 @@ export class PublicSettingsService {
         storeName: true,
         whatsappNumber: true,
         primaryColor: true,
+        instagramUrl: true,
+        homeImageUrl: true,
       },
     });
 
-    // fallback seguro caso ainda não tenha seed
-    return (
-      row ?? {
+    if (!row) {
+      return {
         storeName: 'Minha Loja',
-        whatsappNumber: '5551999999999',
+        whatsappNumber: null,
         primaryColor: '#1976d2',
-      }
-    );
+        instagramUrl: null,
+        homeImageUrl: null,
+      };
+    }
+
+    return row;
   }
 }

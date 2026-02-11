@@ -19,7 +19,10 @@ export class AdminSettingsService {
         data: {
           storeName: dto.storeName ?? 'Minha Loja',
           whatsappNumber: dto.whatsappNumber ?? '5551999999999',
-          primaryColor: dto.primaryColor ?? '#1976d2',
+          primaryColor: dto.primaryColor ?? null,
+          instagramUrl: dto.instagramUrl ?? null,
+          homeImageUrl: dto.homeImageUrl ?? null,
+          logoUrl: dto.logoUrl ?? null,
         },
       });
     }
@@ -30,6 +33,9 @@ export class AdminSettingsService {
         storeName: dto.storeName ?? undefined,
         whatsappNumber: dto.whatsappNumber ?? undefined,
         primaryColor: dto.primaryColor ?? undefined,
+        instagramUrl: dto.instagramUrl ?? undefined,
+        homeImageUrl: dto.homeImageUrl ?? undefined,
+        logoUrl: dto.logoUrl ?? undefined,
       },
     });
   }

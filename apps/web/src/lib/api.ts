@@ -1,18 +1,32 @@
 export const API_URL =
   process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3000";
 
+type ApiInit = Omit<RequestInit, "body"> & { body?: any };
+
 export async function apiGet<T>(path: string): Promise<T> {
   const res = await fetch(`${API_URL}${path}`, { cache: "no-store" });
   if (!res.ok) throw new Error(`GET ${path} failed`);
   return res.json();
 }
 
-export async function apiPost<T>(path: string, body: any): Promise<T> {
+export async function apiPost<T>(
+  path: string,
+  body?: any,
+  init: RequestInit = {},
+) {
+  const isFormData =
+    typeof FormData !== "undefined" && body instanceof FormData;
+
   const res = await fetch(`${API_URL}${path}`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
+    ...init,
+    headers: {
+      ...(init.headers || {}),
+      ...(isFormData ? {} : { "Content-Type": "application/json" }),
+    },
+    body: isFormData ? body : body != null ? JSON.stringify(body) : undefined,
   });
-  if (!res.ok) throw new Error(`POST ${path} failed`);
-  return res.json();
+
+  if (!res.ok) throw new Error(`POST ${path} failed: ${res.status}`);
+  return res.json() as Promise<T>;
 }

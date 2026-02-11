@@ -14,13 +14,19 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const settings = await apiGet<Settings>("/public/settings");
+  let settings: Settings | null = null;
+
+  try {
+    settings = await apiGet<Settings>("/public/settings");
+  } catch {
+    settings = null;
+  }
 
   return (
     <html lang="pt-BR">
       <body>
         <AppRouterCacheProvider options={{ key: "mui" }}>
-          <ThemeRegistry primaryColor={settings.primaryColor}>
+          <ThemeRegistry primaryColor={settings?.primaryColor} mode="light">
             {children}
           </ThemeRegistry>
         </AppRouterCacheProvider>

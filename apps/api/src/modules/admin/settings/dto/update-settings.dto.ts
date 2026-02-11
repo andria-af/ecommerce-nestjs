@@ -1,4 +1,4 @@
-import { IsHexColor, IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 
 export class UpdateSettingsDto {
   @IsOptional()
@@ -10,6 +10,18 @@ export class UpdateSettingsDto {
   whatsappNumber?: string;
 
   @IsOptional()
-  @IsHexColor()
+  @IsString()
   primaryColor?: string;
+
+  @IsOptional()
+  @IsString()
+  instagramUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  homeImageUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  logoUrl?: string;
 }

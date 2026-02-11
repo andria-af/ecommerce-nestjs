@@ -1,10 +1,18 @@
-import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { ValidationPipe } from '@nestjs/common';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
+import { existsSync, mkdirSync } from 'fs';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const port = process.env.PORT || 3000;
 
+  const uploadsDir = join(process.cwd(), 'uploads');
+  if (!existsSync(uploadsDir)) mkdirSync(uploadsDir, { recursive: true });
+
+  app.useStaticAssets(uploadsDir, { prefix: '/uploads' });
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -13,8 +21,10 @@ async function bootstrap() {
     }),
   );
 
-  app.enableCors();
-
-  await app.listen(3000);
+  app.enableCors({
+    origin: process.env.WEB_ORIGIN?.split(',') ?? true,
+    credentials: true,
+  });
+  await app.listen(port);
 }
 bootstrap();
