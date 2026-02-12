@@ -3,6 +3,8 @@ import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import ThemeRegistry from "@/components/ThemeRegistry";
 import { apiGet } from "@/lib/api";
 
+export const dynamic = "force-dynamic";
+
 type Settings = {
   storeName: string;
   whatsappNumber: string;
