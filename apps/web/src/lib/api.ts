@@ -4,8 +4,20 @@ export const API_URL =
 type ApiInit = Omit<RequestInit, "body"> & { body?: any };
 
 export async function apiGet<T>(path: string): Promise<T> {
-  const res = await fetch(`${API_URL}${path}`, { cache: "no-store" });
-  if (!res.ok) throw new Error(`GET ${path} failed`);
+  const url = `${API_URL}${path}`;
+
+  let res: Response;
+  try {
+    res = await fetch(url, { cache: "no-store" });
+  } catch (err) {
+    throw new Error(`GET ${url} failed (network): ${String(err)}`);
+  }
+
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(`GET ${url} failed: ${res.status} ${text}`);
+  }
+
   return res.json();
 }
 
