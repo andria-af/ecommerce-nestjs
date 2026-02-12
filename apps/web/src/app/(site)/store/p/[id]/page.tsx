@@ -1,5 +1,6 @@
 import { apiGet } from "@/lib/api";
 import ProductClient from "../../product-client";
+import { getPublicSettingsSafe } from "@/lib/publicSettings";
 
 type Product = {
   id: string;
@@ -16,10 +17,7 @@ export default async function ProductPage({
 }) {
   const { id } = await params;
   const product = await apiGet<Product>(`/public/products/${id}`);
-  const settings = await apiGet<{
-    whatsappNumber: string;
-    primaryColor: string;
-  }>("/public/settings");
+  const settings = await getPublicSettingsSafe();
 
   return <ProductClient product={product} settings={settings} />;
 }

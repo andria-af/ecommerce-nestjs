@@ -1,13 +1,13 @@
 import * as React from "react";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
 import ThemeRegistry from "@/components/ThemeRegistry";
-import { apiGet } from "@/lib/api";
+import { getPublicSettingsSafe } from "@/lib/publicSettings";
 
 export const dynamic = "force-dynamic";
 
 type Settings = {
   storeName: string;
-  whatsappNumber: string;
+  whatsappNumber: string | null;
   primaryColor: string;
 };
 
@@ -19,7 +19,7 @@ export default async function RootLayout({
   let settings: Settings | null = null;
 
   try {
-    settings = await apiGet<Settings>("/public/settings");
+    settings = await getPublicSettingsSafe();
   } catch {
     settings = null;
   }

@@ -1,6 +1,7 @@
 import { Box, Container, Typography, Stack, Button } from "@mui/material";
 import { apiGet } from "@/lib/api";
 import { assetUrl } from "@/lib/assetUrl";
+import { getPublicSettingsSafe } from "@/lib/publicSettings";
 
 type PublicSettings = {
   homeImageUrl: string | null;
@@ -9,7 +10,7 @@ type PublicSettings = {
 };
 
 export default async function HomePage() {
-  const settings = await apiGet<PublicSettings>("/public/settings");
+  const settings = await getPublicSettingsSafe();
   const bg = assetUrl(settings.homeImageUrl);
 
   const whatsappHref = settings.whatsappNumber

@@ -3,6 +3,7 @@ import { apiGet } from "@/lib/api";
 import { Page } from "@/components/ui/Page";
 import { SectionCard } from "@/components/ui/SectionCard";
 import { ProductGrid } from "./ProductGrid";
+import { getPublicSettingsSafe } from "@/lib/publicSettings";
 
 type Product = {
   id: string;
@@ -19,7 +20,7 @@ type PublicSettings = {
 export default async function StorePage() {
   const [products, settings] = await Promise.all([
     apiGet<Product[]>("/public/products"),
-    apiGet<PublicSettings>("/public/settings"),
+    getPublicSettingsSafe(),
   ]);
 
   return (
